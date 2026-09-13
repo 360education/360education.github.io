@@ -1,0 +1,761 @@
+/* =========================================================================
+   iOS 17 Responsive App Design System - 360 Education
+   Dynamically fits full screen across Mobile, Tablet, and Desktop
+   ========================================================================= */
+
+:root {
+  --ios-blue: #007aff;
+  --ios-blue-hover: #0062cc;
+  --ios-bg: #f2f2f7;
+  --ios-card-bg: #ffffff;
+  --ios-separator: #e5e5ea;
+  --ios-border: #d1d1d6;
+  --ios-text: #000000;
+  --ios-text-secondary: #8e8e93;
+  --ios-text-tertiary: #c7c7cc;
+  --ios-red: #ff3b30;
+  --ios-green: #34c759;
+  --ios-purple: #af52de;
+  --ios-orange: #ff9500;
+  --max-content-width: 680px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--ios-bg);
+  color: var(--ios-text);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Full Screen App Shell */
+#app-container {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh; /* Dynamic mobile viewport height */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background-color: var(--ios-bg);
+  overflow: hidden;
+}
+
+/* Screen Viewport */
+#screen-viewport {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+/* Screen Base */
+.screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--ios-bg);
+  opacity: 0;
+  pointer-events: none;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  transition: opacity 0.2s ease;
+}
+
+.screen.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Responsive Content Wrapper */
+.screen > div,
+.screen > form {
+  width: 100%;
+  max-width: var(--max-content-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* iOS Navigation Bar */
+.ios-nav-bar {
+  width: 100%;
+  background: rgba(242, 242, 247, 0.88);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border-bottom: 0.5px solid var(--ios-separator);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: env(safe-area-inset-top, 0) 16px 0 16px;
+}
+
+.ios-nav-bar > div.nav-content,
+.ios-nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: var(--max-content-width);
+  margin: 0 auto;
+}
+
+.ios-nav-bar .nav-left,
+.ios-nav-bar .nav-right {
+  display: flex;
+  align-items: center;
+  min-width: 60px;
+}
+
+.ios-nav-bar .nav-right {
+  justify-content: flex-end;
+}
+
+.ios-nav-bar .nav-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ios-text);
+  text-align: center;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ios-nav-bar .nav-btn {
+  background: none;
+  border: none;
+  color: var(--ios-blue);
+  font-size: 17px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  transition: opacity 0.15s ease;
+}
+
+.ios-nav-bar .nav-btn:hover {
+  opacity: 0.7;
+}
+
+.ios-nav-bar .nav-btn.icon-btn {
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+/* Large Header */
+.ios-large-header {
+  width: 100%;
+  max-width: var(--max-content-width);
+  margin: 0 auto;
+  padding: 16px 16px 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ios-large-header h1 {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--ios-text);
+  letter-spacing: -0.5px;
+}
+
+/* iOS Bottom Tab Bar */
+#tab-bar {
+  width: 100%;
+  background: rgba(248, 248, 248, 0.94);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-top: 0.5px solid var(--ios-separator);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(56px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 6px);
+  flex-shrink: 0;
+  z-index: 80;
+}
+
+.tab-bar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+  max-width: var(--max-content-width);
+}
+
+.tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  color: var(--ios-text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.15s ease, transform 0.1s ease;
+  user-select: none;
+  padding: 4px 0;
+}
+
+.tab-item:active {
+  transform: scale(0.94);
+}
+
+.tab-item svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 2;
+}
+
+.tab-item span {
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.tab-item.active {
+  color: var(--ios-blue);
+}
+
+.tab-badge {
+  position: absolute;
+  top: 0px;
+  right: calc(50% - 18px);
+  background-color: var(--ios-red);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+/* Inset Grouped Section & Cards */
+.ios-section {
+  width: 100%;
+  max-width: var(--max-content-width);
+  margin: 16px auto;
+  padding: 0 16px;
+}
+
+.ios-section-header {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ios-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 14px 6px 14px;
+}
+
+.ios-card-group {
+  background: var(--ios-card-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 0.5px solid var(--ios-separator);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.ios-list-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 0.5px solid var(--ios-separator);
+  cursor: pointer;
+  background: var(--ios-card-bg);
+  transition: background-color 0.15s ease;
+  color: inherit;
+  text-decoration: none;
+}
+
+.ios-list-row:last-child {
+  border-bottom: none;
+}
+
+.ios-list-row:hover {
+  background-color: #f8fafc;
+}
+
+.ios-list-row:active {
+  background-color: #f1f5f9;
+}
+
+.ios-list-row .row-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.ios-list-row .row-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+  font-size: 18px;
+}
+
+.ios-list-row .row-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ios-text);
+}
+
+.ios-list-row .row-subtitle {
+  font-size: 13px;
+  color: var(--ios-text-secondary);
+  margin-top: 2px;
+}
+
+.ios-list-row .chevron {
+  color: var(--ios-text-tertiary);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* Badges */
+.role-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  text-transform: capitalize;
+}
+
+.role-badge.teacher {
+  background: rgba(175, 82, 222, 0.15);
+  color: var(--ios-purple);
+}
+
+.role-badge.student {
+  background: rgba(52, 199, 89, 0.15);
+  color: var(--ios-green);
+}
+
+/* Segmented Control */
+.ios-segmented-control {
+  display: flex;
+  background-color: #e5e5ea;
+  border-radius: 9px;
+  padding: 2px;
+  margin-bottom: 16px;
+  user-select: none;
+}
+
+.segmented-option {
+  flex: 1;
+  padding: 8px 0;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: var(--ios-text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.segmented-option.active {
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+/* Buttons */
+.ios-btn-primary {
+  width: 100%;
+  background-color: var(--ios-blue);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.ios-btn-primary:hover {
+  background-color: var(--ios-blue-hover);
+}
+
+.ios-btn-primary:active {
+  transform: scale(0.98);
+}
+
+.ios-btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ios-btn-secondary {
+  width: 100%;
+  background-color: #e5e5ea;
+  color: var(--ios-blue);
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ios-btn-secondary:hover {
+  background-color: #d1d1d6;
+}
+
+.ios-btn-danger {
+  width: 100%;
+  background-color: #fee2e2;
+  color: var(--ios-red);
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.ios-btn-danger:hover {
+  background-color: #fecaca;
+}
+
+.ios-btn-ghost {
+  background: none;
+  border: none;
+  color: var(--ios-blue);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 0;
+}
+
+.ios-btn-ghost:hover {
+  text-decoration: underline;
+}
+
+/* Inputs */
+.ios-input-group {
+  margin-bottom: 14px;
+}
+
+.ios-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ios-text-secondary);
+  margin-bottom: 6px;
+}
+
+.ios-input,
+.ios-select,
+.ios-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid var(--ios-border);
+  border-radius: 10px;
+  background-color: var(--ios-card-bg);
+  color: var(--ios-text);
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ios-input:focus,
+.ios-select:focus,
+.ios-textarea:focus {
+  border-color: var(--ios-blue);
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+}
+
+.ios-textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* Empty States */
+.ios-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--ios-text-secondary);
+}
+
+.ios-empty-state .empty-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  opacity: 0.6;
+}
+
+.ios-empty-state h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ios-text);
+  margin-bottom: 4px;
+}
+
+.ios-empty-state p {
+  font-size: 14px;
+  max-width: 280px;
+  line-height: 1.4;
+}
+
+/* Modals & Sheets (Bottom sheet on mobile, dialog on desktop) */
+.ios-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 200;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.ios-modal-overlay.open {
+  display: flex;
+  opacity: 1;
+}
+
+.ios-sheet {
+  width: 100%;
+  max-height: 90vh;
+  background: var(--ios-bg);
+  border-radius: 20px 20px 0 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.ios-modal-overlay.open .ios-sheet {
+  transform: translateY(0);
+}
+
+/* Dialog style on desktop/tablet */
+@media (min-width: 600px) {
+  .ios-modal-overlay {
+    align-items: center;
+  }
+  .ios-sheet {
+    max-width: 520px;
+    border-radius: 20px;
+    transform: translateY(20px) scale(0.96);
+  }
+  .ios-modal-overlay.open .ios-sheet {
+    transform: translateY(0) scale(1);
+  }
+}
+
+.sheet-handle {
+  width: 36px;
+  height: 5px;
+  background: #cbd5e1;
+  border-radius: 3px;
+  margin: 8px auto 4px auto;
+}
+
+.sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 0.5px solid var(--ios-separator);
+  background: var(--ios-card-bg);
+}
+
+.sheet-header h3 {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.sheet-header .sheet-btn {
+  background: none;
+  border: none;
+  color: var(--ios-blue);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+
+.sheet-header .sheet-btn.cancel {
+  font-weight: 400;
+  color: var(--ios-text-secondary);
+}
+
+.sheet-body {
+  padding: 16px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Chat Layout */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  max-width: var(--max-content-width);
+  margin: 0 auto;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chat-bubble {
+  max-width: 75%;
+  padding: 10px 14px;
+  border-radius: 18px;
+  font-size: 15px;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.chat-bubble.sent {
+  align-self: flex-end;
+  background-color: var(--ios-blue);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.chat-bubble.received {
+  align-self: flex-start;
+  background-color: #e5e5ea;
+  color: #000;
+  border-bottom-left-radius: 4px;
+}
+
+.chat-bubble .bubble-author {
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 2px;
+  opacity: 0.8;
+}
+
+.chat-bubble .bubble-time {
+  font-size: 10px;
+  margin-top: 4px;
+  opacity: 0.7;
+  text-align: right;
+}
+
+.chat-input-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--ios-card-bg);
+  border-top: 0.5px solid var(--ios-separator);
+  width: 100%;
+  max-width: var(--max-content-width);
+  margin: 0 auto;
+}
+
+.chat-input-bar input {
+  flex: 1;
+  border: 1px solid var(--ios-border);
+  border-radius: 20px;
+  padding: 10px 16px;
+  font-size: 15px;
+  outline: none;
+  font-family: inherit;
+  background-color: #f8fafc;
+}
+
+.chat-input-bar input:focus {
+  border-color: var(--ios-blue);
+}
+
+.chat-input-bar button {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: var(--ios-blue);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.chat-input-bar button:active {
+  transform: scale(0.92);
+}
+
+/* Spinner */
+.ios-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(0, 122, 255, 0.2);
+  border-top-color: var(--ios-blue);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 30px auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
