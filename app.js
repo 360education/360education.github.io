@@ -326,27 +326,38 @@ async function loadSubjectView(subject) {
 
       const studentMap = new Map();
       try {
-        const studentsSnap = await getDocs(
-          query(collection(db, "users_v2"), where("role", "==", "student"))
-        );
+        let studentsSnap;
+        try {
+          studentsSnap = await getDocs(
+            query(collection(db, "users_v2"), where("role", "==", "student"))
+          );
+        } catch (roleQueryErr) {
+          console.warn("Could not load students by role:", roleQueryErr);
+        }
+        if (!studentsSnap || studentsSnap.empty) {
+          studentsSnap = await getDocs(collection(db, "users_v2"));
+        }
         studentsSnap.forEach(d => {
           const data = d.data();
+          const role = String(data.role || data.userType || "").trim().toLowerCase();
+          if (role && role !== "student") return;
           studentMap.set(d.id, {
             id: d.id,
-            name: data.name || data.email || "Student",
+            name: data.name || data.fullName || data.displayName || data.email || "Student",
             goal: null
           });
         });
       } catch (studentsErr) {
-        // Keep rendering any students available from goals or links.
+        console.warn("Could not load student profiles:", studentsErr);
       }
 
       goalsSnap.forEach(d => {
         const data = d.data();
         if (data.studentId) {
+          const student = studentMap.get(data.studentId);
           studentMap.set(data.studentId, {
             id: data.studentId,
-            name: data.studentName || "Student",
+            name: data.studentName || student?.name || "Student",
             goal: { id: d.id, ...data }
           });
         }
@@ -402,7 +413,6 @@ async function loadSubjectView(subject) {
                 <div class="row-icon" style="background-color: #e2e8f0; color: #64748b; font-size: 18px;">👤</div>
                 <div>
                   <div class="row-title">${escapeHtml(s.name)}</div>
-                  <div class="row-subtitle">${s.goal ? "🎯 " + escapeHtml(s.goal.goalText) : "No goal set yet"}</div>
                 </div>
               </div>
               <div class="chevron">›</div>
