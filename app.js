@@ -319,23 +319,10 @@ async function loadSubjectView(subject) {
     actionBtn.onclick = () => openSetGoalModal(subject);
 
     try {
-      // 1. Query goals specifically for this teacher and subject
-      // (Uses teacherId to satisfy Firestore ownership rules without permission errors)
-      let goalsSnap;
-      try {
-        goalsSnap = await getDocs(
-          query(
-            collection(db, "student_goals"),
-            where("teacherId", "==", currentUser.uid),
-            where("subject", "==", subject)
-          )
-        );
-      } catch (scopedErr) {
-        // Fallback: query by subject
-        goalsSnap = await getDocs(
-          query(collection(db, "student_goals"), where("subject", "==", subject))
-        );
-      }
+      // Load all goals for this subject, regardless of which teacher created them.
+      const goalsSnap = await getDocs(
+        query(collection(db, "student_goals"), where("subject", "==", subject))
+      );
 
       const studentMap = new Map();
       try {
