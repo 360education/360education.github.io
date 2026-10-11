@@ -351,6 +351,34 @@ async function loadSubjectView(subject) {
         console.warn("Could not load student profiles:", studentsErr);
       }
 
+      if (studentMap.size === 0) {
+        try {
+          let studentsSnap;
+          try {
+            studentsSnap = await getDocs(
+              query(collection(db, "users"), where("role", "==", "student"))
+            );
+          } catch (roleQueryErr) {
+            console.warn("Could not load legacy students by role:", roleQueryErr);
+          }
+          if (!studentsSnap || studentsSnap.empty) {
+            studentsSnap = await getDocs(collection(db, "users"));
+          }
+          studentsSnap.forEach(d => {
+            const data = d.data();
+            const role = String(data.role || data.userType || "").trim().toLowerCase();
+            if (role && role !== "student") return;
+            studentMap.set(d.id, {
+              id: d.id,
+              name: data.name || data.fullName || data.displayName || data.email || "Student",
+              goal: null
+            });
+          });
+        } catch (legacyStudentsErr) {
+          console.warn("Could not load legacy student profiles:", legacyStudentsErr);
+        }
+      }
+
       goalsSnap.forEach(d => {
         const data = d.data();
         if (data.studentId) {
