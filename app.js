@@ -338,6 +338,22 @@ async function loadSubjectView(subject) {
       }
 
       const studentMap = new Map();
+      try {
+        const studentsSnap = await getDocs(
+          query(collection(db, "users_v2"), where("role", "==", "student"))
+        );
+        studentsSnap.forEach(d => {
+          const data = d.data();
+          studentMap.set(d.id, {
+            id: d.id,
+            name: data.name || data.email || "Student",
+            goal: null
+          });
+        });
+      } catch (studentsErr) {
+        // Keep rendering any students available from goals or links.
+      }
+
       goalsSnap.forEach(d => {
         const data = d.data();
         if (data.studentId) {
