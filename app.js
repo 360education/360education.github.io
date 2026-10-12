@@ -429,18 +429,23 @@ async function loadSubjectView(subject) {
             <div class="ios-section-header">${subject.toUpperCase()} STUDENTS</div>
             <div class="ios-card-group">
         `;
-        students.forEach(s => {
+        students.forEach((s, index) => {
+          const isAcademic = subject === "Academic";
+          const rowName = isAcademic ? `Student ${index + 1}` : s.name;
+          const goalText = s.goal?.goalText ? escapeHtml(s.goal.goalText) : "No goal set yet";
+
           html += `
             <div class="ios-list-row" onclick='openTeacherStudentDetail(${JSON.stringify({
               subject,
               studentId: s.id,
-              studentName: s.name,
+              studentName: isAcademic ? "Student" : s.name,
               goal: s.goal
             })})'>
               <div class="row-left">
                 <div class="row-icon" style="background-color: #e2e8f0; color: #64748b; font-size: 18px;">👤</div>
                 <div>
-                  <div class="row-title">${escapeHtml(s.name)}</div>
+                  <div class="row-title">${escapeHtml(rowName)}</div>
+                  ${!isAcademic ? "" : `<div class="row-subtitle">${goalText}</div>`}
                 </div>
               </div>
               <div class="chevron">›</div>
